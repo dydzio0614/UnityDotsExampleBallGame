@@ -1,4 +1,3 @@
-using ECS.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -54,7 +53,7 @@ partial struct ObjectPickupSystem : ISystem
             {
                 Ecb.SetEnabled(objectToPickup, false);
                 Entity entity = Ecb.CreateEntity();
-                Ecb.AddComponent(entity, new PickupPerformedNotificationComponent());
+                Ecb.AddComponent(entity, new PickupActivationRequestComponent());
             }
         }
     }

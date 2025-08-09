@@ -25,7 +25,6 @@ partial struct PickupRotationSystem : ISystem
         foreach (Entity entity in entities)
         {
             RefRO<SpinningRotationComponent> rotationComponent = SystemAPI.GetComponentRO<SpinningRotationComponent>(entity);
-            
             RefRW<LocalTransform> localTransform = SystemAPI.GetComponentRW<LocalTransform>(entity);
             
             float rotationSpeed = math.radians(rotationComponent.ValueRO.DegreesPerSecond) * SystemAPI.Time.DeltaTime;

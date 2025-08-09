@@ -3,7 +3,6 @@ using UnityEngine;
 
 class PickupObjectAuthoring : MonoBehaviour
 {
-
 }
 
 class PickupObjectBaker : Baker<PickupObjectAuthoring>
@@ -15,7 +14,5 @@ class PickupObjectBaker : Baker<PickupObjectAuthoring>
         AddComponent<PickupObjectComponent>(entity);
         AddComponent(entity, new SpinningRotationComponent() { DegreesPerSecond = 20f });
         AddComponent<Disabled>(entity);
-        
-        
     }
 }

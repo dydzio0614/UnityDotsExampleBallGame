@@ -17,8 +17,6 @@ partial struct PlayerMovementSystem : ISystem
     {
         _query = new EntityQueryBuilder(Allocator.Temp)
             .WithAll<PlayerComponent>()
-            // .WithAll<LocalTransform>()
-            // .WithAll<PhysicsMass>()
             .WithAllRW<PhysicsVelocity>()
             .Build(ref state);
         
@@ -33,7 +31,6 @@ partial struct PlayerMovementSystem : ISystem
         if (inputDataComponent.MovementData.x != 0f || inputDataComponent.MovementData.y != 0f)
         {
             float3 movementVector = math.normalizesafe(new float3(inputDataComponent.MovementData.x, 0f, inputDataComponent.MovementData.y));
-            
             NativeArray<Entity> entities = _query.ToEntityArray(Allocator.Temp);
 
             foreach (var entity in entities)
@@ -46,11 +43,5 @@ partial struct PlayerMovementSystem : ISystem
 
             entities.Dispose();
         }
-    }
-
-    [BurstCompile]
-    public void OnDestroy(ref SystemState state)
-    {
-        
     }
 }
