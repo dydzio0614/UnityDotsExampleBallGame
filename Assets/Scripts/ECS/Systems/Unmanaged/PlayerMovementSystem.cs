@@ -40,8 +40,6 @@ partial struct PlayerMovementSystem : ISystem
             {
                 RefRW<PhysicsVelocity> physicsVelocity = SystemAPI.GetComponentRW<PhysicsVelocity>(entity);
                 RefRO<PlayerComponent> playerData = SystemAPI.GetComponentRO<PlayerComponent>(entity);
-                // RefRO<LocalTransform> localTransform = SystemAPI.GetComponentRO<LocalTransform>(entity);
-                // RefRO<PhysicsMass> physicsMass = SystemAPI.GetComponentRO<PhysicsMass>(entity);
 
                 physicsVelocity.ValueRW.Linear += movementVector * playerData.ValueRO.PlayerSpeed * SystemAPI.Time.DeltaTime;
             }

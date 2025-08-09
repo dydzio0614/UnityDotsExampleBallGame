@@ -2,5 +2,5 @@ using Unity.Entities;
 
 public struct SpinningRotationComponent : IComponentData
 {
-    public float AngleValuePerSecond;
+    public float DegreesPerSecond;
 }

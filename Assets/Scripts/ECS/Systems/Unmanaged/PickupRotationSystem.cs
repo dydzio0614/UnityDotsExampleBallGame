@@ -28,7 +28,7 @@ partial struct PickupRotationSystem : ISystem
             
             RefRW<LocalTransform> localTransform = SystemAPI.GetComponentRW<LocalTransform>(entity);
             
-            float rotationSpeed = math.radians(rotationComponent.ValueRO.AngleValuePerSecond) * SystemAPI.Time.DeltaTime;
+            float rotationSpeed = math.radians(rotationComponent.ValueRO.DegreesPerSecond) * SystemAPI.Time.DeltaTime;
             localTransform.ValueRW.Rotation = math.normalize(math.mul(quaternion.RotateY(rotationSpeed), localTransform.ValueRO.Rotation));
         }
         

@@ -1,3 +1,4 @@
+using ECS.Components;
 using Unity.Burst;
 using Unity.Collections;
 using Unity.Entities;
@@ -8,25 +9,28 @@ using Unity.Physics.Systems;
 [UpdateAfter(typeof(PhysicsSystemGroup))]
 partial struct ObjectPickupSystem : ISystem
 {
+    private ComponentLookup<PickupObjectComponent> _pickupObjectLookup;
+    
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
+        _pickupObjectLookup = SystemAPI.GetComponentLookup<PickupObjectComponent>(true);
+        
         state.RequireForUpdate<SimulationSingleton>();
-        state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
+        state.RequireForUpdate<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>();
     }
 
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
+        _pickupObjectLookup.Update(ref state);
         SimulationSingleton simulation = SystemAPI.GetSingleton<SimulationSingleton>();
-        EntityCommandBuffer commandBufferSystem = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>()
+        EntityCommandBuffer commandBufferSystem = SystemAPI.GetSingleton<EndFixedStepSimulationEntityCommandBufferSystem.Singleton>()
             .CreateCommandBuffer(state.WorldUnmanaged);
         
-        ComponentLookup<PickupObjectComponent> pickupObjectLookup = state.GetComponentLookup<PickupObjectComponent>(true);
-
         ObjectPickupTriggerEventsJob job = new ObjectPickupTriggerEventsJob()
         {
-            PickupObjectsLookup = pickupObjectLookup,
+            PickupObjectsLookup = _pickupObjectLookup,
             Ecb = commandBufferSystem
         };
 
@@ -42,16 +46,16 @@ partial struct ObjectPickupSystem : ISystem
         
         public void Execute(TriggerEvent triggerEvent)
         {
-            Entity objectToPickup = PickupObjectsLookup.EntityExists(triggerEvent.EntityA) ? triggerEvent.EntityA 
-                : PickupObjectsLookup.EntityExists(triggerEvent.EntityB) ? triggerEvent.EntityB 
+            Entity objectToPickup = PickupObjectsLookup.HasComponent(triggerEvent.EntityA) ? triggerEvent.EntityA 
+                : PickupObjectsLookup.HasComponent(triggerEvent.EntityB) ? triggerEvent.EntityB 
                 : Entity.Null;
 
             if (objectToPickup != Entity.Null)
             {
                 Ecb.SetEnabled(objectToPickup, false);
+                Entity entity = Ecb.CreateEntity();
+                Ecb.AddComponent(entity, new PickupPerformedNotificationComponent());
             }
         }
     }
 }
-
-

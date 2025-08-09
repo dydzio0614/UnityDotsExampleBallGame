@@ -13,6 +13,9 @@ class PickupObjectBaker : Baker<PickupObjectAuthoring>
         Entity entity = GetEntity(TransformUsageFlags.Dynamic);
         
         AddComponent<PickupObjectComponent>(entity);
-        AddComponent<SpinningRotationComponent>(entity, new SpinningRotationComponent() { AngleValuePerSecond = 10f });
+        AddComponent(entity, new SpinningRotationComponent() { DegreesPerSecond = 20f });
+        AddComponent<Disabled>(entity);
+        
+        
     }
 }
